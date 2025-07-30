@@ -1,0 +1,13 @@
+country,seller_segment,active_merchant_count_90d,market_share_percent,monthly_gpv_usd,gpv_share_percent,monthly_gpv_per_active_merchant
+Australia,Services,143274,56.31,397079797,31.69,2771
+Australia,Retail,67374,26.47,185354970,14.79,2751
+Australia,Food & Drink,44364,17.43,670585948,53.52,15116
+Canada,Services,157727,56.88,600200433,48.97,3805
+Canada,Retail,83149,30.0,209224588,17.07,2516
+Canada,Food & Drink,36634,13.21,416247455,33.96,11362
+Japan,Services,85030,69.31,309613061,67.65,3641
+Japan,Retail,34801,28.37,136633345,29.86,3926
+Japan,Food & Drink,2923,2.38,11405723,2.49,3902
+United Kingdom,Services,83457,56.02,305778340,31.68,3664
+United Kingdom,Retail,37066,24.88,151614629,15.71,4090
+United Kingdom,Food & Drink,28206,18.93,507787932,52.61,18003
