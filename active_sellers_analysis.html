@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Active Sellers Analysis: Penetration, Growth & GPV by Segment</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f5f5f5;
+        }
+        .container { 
+            max-width: 1600px; 
+            margin: 0 auto; 
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            text-align: center; 
+            color: #333; 
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            text-align: center; 
+            color: #666; 
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        .charts-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 40px; 
+            margin-bottom: 30px;
+        }
+        .country-section {
+            background-color: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .country-header {
+            text-align: center;
+            font-size: 20px; 
+            font-weight: bold; 
+            margin-bottom: 20px; 
+            color: #333;
+        }
+        .country-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .pie-section {
+            flex: 1;
+            text-align: center;
+        }
+        .pie-legend {
+            margin-top: 15px;
+            text-align: left;
+            font-size: 12px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        .data-section {
+            flex: 1.2;
+            padding-left: 20px;
+            border-left: 2px solid #e0e0e0;
+        }
+        .data-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .tab.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .data-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .yoy-positive {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .yoy-negative {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .gpv-item {
+            background-color: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+        }
+        .data-segment {
+            font-weight: bold;
+        }
+        .data-value {
+            font-weight: bold;
+        }
+        .positive { color: #28a745; }
+        .negative { color: #dc3545; }
+        .gpv-color { color: #17a2b8; }
+        
+        .summary { 
+            margin-top: 40px; 
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .summary h2 { 
+            color: #333; 
+            margin-bottom: 15px;
+        }
+        .insights {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .insight-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #17a2b8;
+        }
+        .insight-title {
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 10px;
+        }
+        .gpv-summary {
+            margin-top: 20px;
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+        }
+        .active-note {
+            background-color: #d1ecf1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #17a2b8;
+            font-weight: bold;
+            color: #0c5460;
+        }
+    </style>
+    <script>
+        function showTab(country, tabName) {
+            // Hide all tab contents for this country
+            const contents = document.querySelectorAll(`#${country} .tab-content`);
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs for this country
+            const tabs = document.querySelectorAll(`#${country} .tab`);
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(`${country}-${tabName}`).classList.add('active');
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Active Sellers Analysis: Market Penetration, Growth & GPV</h1>
+        <div class="subtitle">Analysis of sellers with payment activity in the last 12 months</div>
+        
+        <div class="active-note">
+            📊 <strong>Active Sellers Only:</strong> This analysis includes only merchants with payment activity in the last 12 months and active merchant status.
+        </div>
+        
+        <div class="charts-grid">
+
+            <div class="country-section" id="Australia">
+                <div class="country-header">Australia<br>
+                    <span style="font-size: 14px; color: #666;">
+                        390,807 active sellers • $1.2B/month GPV
+                    </span>
+                </div>
+                <div class="country-content">
+                    <div class="pie-section">
+                        <svg width="280" height="280" viewBox="0 0 280 280">
+    
+                            <path d="M 140 140 L 140.0 50.0 A 90 90 0 1 1 119.54019059180185 227.6435747729416 Z" fill="#45B7D1" stroke="white" stroke-width="2"/>
+        
+                            <text x="202.58626705391018" y="147.2082713778435" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">53.6%</text>
+            
+                            <path d="M 140 140 L 119.54019059180185 227.6435747729416 A 90 90 0 0 1 63.469952946821536 92.63807543988219 Z" fill="#4ECDC4" stroke="white" stroke-width="2"/>
+        
+                            <text x="81.81833754906555" y="164.16390188784757" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">30.2%</text>
+            
+                            <path d="M 140 140 L 63.469952946821536 92.63807543988219 A 90 90 0 0 1 138.69942591134534 50.00939767375752 Z" fill="#FF6B6B" stroke="white" stroke-width="2"/>
+        
+                            <text x="108.94095630838049" y="85.18817823715335" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">15.9%</text>
+            
+                        </svg>
+                        <div class="pie-legend">
+    
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                <span>Services: 53.6%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                <span>Retail: 30.2%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                <span>Food & Drink: 15.9%</span>
+                            </div>
+        
+                        </div>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-tabs">
+                            <div class="tab active" onclick="showTab('Australia', 'yoy')">YoY Growth</div>
+                            <div class="tab" onclick="showTab('Australia', 'gpv')">GPV Share</div>
+                            <div class="tab" onclick="showTab('Australia', 'avg')">Avg GPV/Seller</div>
+                        </div>
+                        
+                        <div id="Australia-yoy" class="tab-content active">
+    
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value positive">+4.6% (+1,410)</span>
+                            </div>
+            
+                            <div class="data-item yoy-negative">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value negative">-4.6% (-2,592)</span>
+                            </div>
+            
+                            <div class="data-item yoy-negative">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value negative">-3.0% (-3,415)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Australia-gpv" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">51.9% ($621M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">15.9% ($190M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">32.2% ($385M)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Australia-avg" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">$9,964/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">$1,614/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">$1,842/month</span>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="country-section" id="Canada">
+                <div class="country-header">Canada<br>
+                    <span style="font-size: 14px; color: #666;">
+                        413,235 active sellers • $1.0B/month GPV
+                    </span>
+                </div>
+                <div class="country-content">
+                    <div class="pie-section">
+                        <svg width="280" height="280" viewBox="0 0 280 280">
+    
+                            <path d="M 140 140 L 140.0 50.0 A 90 90 0 1 1 116.52426443390928 226.88434749499464 Z" fill="#45B7D1" stroke="white" stroke-width="2"/>
+        
+                            <text x="202.4523807573789" y="148.2885546228138" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">54.2%</text>
+            
+                            <path d="M 140 140 L 116.52426443390928 226.88434749499464 A 90 90 0 0 1 76.56063314518748 76.16077433849534 Z" fill="#4ECDC4" stroke="white" stroke-width="2"/>
+        
+                            <text x="79.10419357293485" y="156.1462305073788" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">33.4%</text>
+            
+                            <path d="M 140 140 L 76.56063314518748 76.16077433849534 A 90 90 0 0 1 140.90476344410578 50.004547875405336 Z" fill="#FF6B6B" stroke="white" stroke-width="2"/>
+        
+                            <text x="116.27546019837165" y="81.63780152186733" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">12.6%</text>
+            
+                        </svg>
+                        <div class="pie-legend">
+    
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                <span>Services: 54.2%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                <span>Retail: 33.4%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                <span>Food & Drink: 12.6%</span>
+                            </div>
+        
+                        </div>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-tabs">
+                            <div class="tab active" onclick="showTab('Canada', 'yoy')">YoY Growth</div>
+                            <div class="tab" onclick="showTab('Canada', 'gpv')">GPV Share</div>
+                            <div class="tab" onclick="showTab('Canada', 'avg')">Avg GPV/Seller</div>
+                        </div>
+                        
+                        <div id="Canada-yoy" class="tab-content active">
+    
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value positive">+12.2% (+3,577)</span>
+                            </div>
+            
+                            <div class="data-item yoy-negative">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value negative">-1.4% (-886)</span>
+                            </div>
+            
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value positive">+3.4% (+4,323)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Canada-gpv" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">31.5% ($325M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">17.8% ($183M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">50.7% ($522M)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Canada-avg" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">$6,255/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">$1,333/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">$2,342/month</span>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="country-section" id="Japan">
+                <div class="country-header">Japan<br>
+                    <span style="font-size: 14px; color: #666;">
+                        156,027 active sellers • $414M/month GPV
+                    </span>
+                </div>
+                <div class="country-content">
+                    <div class="pie-section">
+                        <svg width="280" height="280" viewBox="0 0 280 280">
+    
+                            <path d="M 140 140 L 140.0 50.0 A 90 90 0 1 1 60.38185221933065 181.9636812490932 Z" fill="#45B7D1" stroke="white" stroke-width="2"/>
+        
+                            <text x="193.94255436612642" y="172.54536569862896" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">67.3%</text>
+            
+                            <path d="M 140 140 L 60.38185221933065 181.9636812490932 A 90 90 0 0 1 126.42379271256307 51.029855593640036 Z" fill="#4ECDC4" stroke="white" stroke-width="2"/>
+        
+                            <text x="83.7502473038923" y="111.62808921438805" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">30.3%</text>
+            
+                            <path d="M 140 140 L 126.42379271256307 51.029855593640036 A 90 90 0 0 1 140.22619443293036 50.000284244457134 Z" fill="#FF6B6B" stroke="white" stroke-width="2"/>
+        
+                        </svg>
+                        <div class="pie-legend">
+    
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                <span>Services: 67.3%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                <span>Retail: 30.3%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                <span>Food & Drink: 2.5%</span>
+                            </div>
+        
+                        </div>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-tabs">
+                            <div class="tab active" onclick="showTab('Japan', 'yoy')">YoY Growth</div>
+                            <div class="tab" onclick="showTab('Japan', 'gpv')">GPV Share</div>
+                            <div class="tab" onclick="showTab('Japan', 'avg')">Avg GPV/Seller</div>
+                        </div>
+                        
+                        <div id="Japan-yoy" class="tab-content active">
+    
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value positive">+47.1% (+957)</span>
+                            </div>
+            
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value positive">+23.1% (+4,277)</span>
+                            </div>
+            
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value positive">+32.8% (+14,235)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Japan-gpv" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">2.5% ($10M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">30.1% ($125M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">67.4% ($279M)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="Japan-avg" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">$2,728/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">$2,677/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">$2,690/month</span>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="country-section" id="UnitedKingdom">
+                <div class="country-header">United Kingdom<br>
+                    <span style="font-size: 14px; color: #666;">
+                        225,515 active sellers • $778M/month GPV
+                    </span>
+                </div>
+                <div class="country-content">
+                    <div class="pie-section">
+                        <svg width="280" height="280" viewBox="0 0 280 280">
+    
+                            <path d="M 140 140 L 140.0 50.0 A 90 90 0 1 1 115.1080928438231 226.48926498779065 Z" fill="#45B7D1" stroke="white" stroke-width="2"/>
+        
+                            <text x="202.38259607439227" y="148.79839229741526" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">54.5%</text>
+            
+                            <path d="M 140 140 L 115.1080928438231 226.48926498779065 A 90 90 0 0 1 59.60504627746815 99.5444513576696 Z" fill="#4ECDC4" stroke="white" stroke-width="2"/>
+        
+                            <text x="82.27619359651821" y="165.23810956259115" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">28.0%</text>
+            
+                            <path d="M 140 140 L 59.60504627746815 99.5444513576696 A 90 90 0 0 1 140.62203039310015 50.00214959128158 Z" fill="#FF6B6B" stroke="white" stroke-width="2"/>
+        
+                            <text x="107.13323148372629" y="86.25266957980445" text-anchor="middle" dominant-baseline="middle" 
+                                  fill="white" font-weight="bold" font-size="12">17.7%</text>
+            
+                        </svg>
+                        <div class="pie-legend">
+    
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #45B7D1;"></div>
+                                <span>Services: 54.5%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                                <span>Retail: 28.0%</span>
+                            </div>
+        
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                                <span>Food & Drink: 17.7%</span>
+                            </div>
+        
+                        </div>
+                    </div>
+                    <div class="data-section">
+                        <div class="data-tabs">
+                            <div class="tab active" onclick="showTab('UnitedKingdom', 'yoy')">YoY Growth</div>
+                            <div class="tab" onclick="showTab('UnitedKingdom', 'gpv')">GPV Share</div>
+                            <div class="tab" onclick="showTab('UnitedKingdom', 'avg')">Avg GPV/Seller</div>
+                        </div>
+                        
+                        <div id="UnitedKingdom-yoy" class="tab-content active">
+    
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value positive">+12.3% (+4,786)</span>
+                            </div>
+            
+                            <div class="data-item yoy-negative">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value negative">-12.8% (-9,237)</span>
+                            </div>
+            
+                            <div class="data-item yoy-positive">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value positive">+9.8% (+12,758)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="UnitedKingdom-gpv" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">50.2% ($391M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">16.6% ($130M)</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">33.1% ($258M)</span>
+                            </div>
+            
+                        </div>
+                        
+                        <div id="UnitedKingdom-avg" class="tab-content">
+    
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Food & Drink</span>
+                                <span class="data-value gpv-color">$9,842/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Retail</span>
+                                <span class="data-value gpv-color">$2,066/month</span>
+                            </div>
+            
+                            <div class="data-item gpv-item">
+                                <span class="data-segment">Services</span>
+                                <span class="data-value gpv-color">$2,109/month</span>
+                            </div>
+            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        
+        <div class="summary">
+            <h2>Key Insights: Active Sellers Analysis</h2>
+            
+            <div class="insights">
+                <div class="insight-box">
+                    <div class="insight-title">🚀 Growth Champions</div>
+                    <strong>Japan:</strong> All segments growing strongly<br>
+                    <strong>Food & Drink:</strong> +47.1% (Japan), +12.3% (UK)<br>
+                    <strong>Services:</strong> Steady growth in most markets
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">💰 GPV Powerhouses</div>
+                    <strong>Food & Drink dominates GPV:</strong><br>
+                    • Australia: 51.9% of GPV<br>
+                    • UK: 50.3% of GPV<br>
+                    • Canada: 31.5% of GPV<br>
+                    • Japan: Only 2.5% of GPV
+                </div>
+                
+                <div class="insight-box">
+                    <div class="insight-title">📊 Market Share vs GPV</div>
+                    <strong>Active Seller Distribution:</strong><br>
+                    • Services: 54-67% of sellers<br>
+                    • Retail: 28-33% of sellers<br>
+                    • Food & Drink: 2-18% of sellers<br>
+                    But F&D drives 32-52% of GPV!
+                </div>
+            </div>
+            
+            <div class="gpv-summary">
+                <h3>🎯 Strategic Insights for Active Sellers</h3>
+                <p><strong>Services Dominance:</strong> Services represents 54-67% of active sellers across all markets, showing the segment's broad appeal and accessibility.</p>
+                
+                <p><strong>Food & Drink Efficiency:</strong> Despite being only 2-18% of active sellers, Food & Drink generates 32-52% of GPV in most markets, indicating extremely high revenue per seller.</p>
+                
+                <p><strong>Japan's Unique Profile:</strong> Japan shows the highest Services concentration (67%) and lowest Food & Drink penetration (2.5%), but all segments are growing explosively.</p>
+                
+                <p><strong>Retail Challenges:</strong> Retail faces declining growth in mature markets (UK -12.8%, Australia -4.6%) despite maintaining 28-33% market share.</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+            <strong>Note:</strong> This analysis focuses exclusively on active sellers - merchants with payment activity in the last 12 months and active merchant status. 
+            YoY growth percentages represent new active merchant acquisition compared to the previous year.
+        </div>
+    </div>
+</body>
+</html>
