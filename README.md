@@ -4,7 +4,11 @@
 
 This dashboard provides a comprehensive analysis of market penetration, year-over-year growth, and GPV contribution by seller segment across four key markets: Canada, United Kingdom, Australia, and Japan.
 
-### 🌐 **[View Live Dashboard](https://tessal261.github.io/audience-intl-dash/complete_market_analysis.html)**
+### 🌐 **[View Live Dashboard](https://tessal261.github.io/audience-intl-dash/active_sellers_analysis.html)**
+
+### 📊 **Alternative Views:**
+- **[Active Sellers Analysis](https://tessal261.github.io/audience-intl-dash/active_sellers_analysis.html)** - Focus on sellers with recent payment activity
+- **[Complete Market Analysis](https://tessal261.github.io/audience-intl-dash/complete_market_analysis.html)** - All registered merchants
 
 ### Key Features
 
@@ -30,8 +34,10 @@ Despite representing only 7-9% of merchants in most markets, Food & Drink genera
 - Analysis period: Last 12 months
 
 ### Files
-- `complete_market_analysis.html` - Interactive dashboard
-- `comprehensive_market_data.csv` - Raw data export
+- `active_sellers_analysis.html` - **Primary dashboard** (active sellers only)
+- `complete_market_analysis.html` - Alternative view (all registered merchants)
+- `active_sellers_data.csv` - Active sellers data export
+- `comprehensive_market_data.csv` - Complete market data export
 
 ---
 *Generated using Snowflake data analysis and visualization tools*
