@@ -7,7 +7,7 @@ This dashboard provides a comprehensive analysis of market penetration, year-ove
 ### 🌐 **[View Live Dashboard](https://tessal261.github.io/audience-intl-dash/active_sellers_analysis.html)**
 
 ### 📊 **Alternative Views:**
-- **[Active Sellers Analysis (90 Days)](https://tessal261.github.io/audience-intl-dash/active_sellers_analysis.html)** - Focus on sellers with payment activity in last 90 days
+- **[Active Sellers Analysis (90 Days + YoY Growth)](https://tessal261.github.io/audience-intl-dash/active_sellers_analysis.html)** - Focus on sellers with payment activity in last 90 days, including YoY growth metrics
 - **[Complete Market Analysis](https://tessal261.github.io/audience-intl-dash/complete_market_analysis.html)** - All registered merchants (12-month activity)
 
 ### Key Features
@@ -34,7 +34,7 @@ Despite representing only 7-9% of merchants in most markets, Food & Drink genera
 - Analysis period: Last 12 months
 
 ### Files
-- `active_sellers_analysis.html` - **Primary dashboard** (active sellers in last 90 days)
+- `active_sellers_analysis.html` - **Primary dashboard** (active sellers in last 90 days + YoY growth)
 - `complete_market_analysis.html` - Alternative view (all registered merchants, 12-month activity)
 - `active_sellers_90d_data.csv` - 90-day active sellers data export
 - `comprehensive_market_data.csv` - Complete market data export
